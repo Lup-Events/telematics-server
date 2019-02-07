@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Lup.Telematics</RootNamespace>
+    <AssemblyName>Lup.Telematics</AssemblyName>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId />
+    <PackageVersion>0.1.0</PackageVersion>
+    <Title>Lup.TelematicsServer</Title>
+    <PackageProjectUrl>https://github.com/LupEvents/telematics-server</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/LupEvents/telematics-server/master/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/LupEvents/telematics-server</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>gps,tracker,telematics,oyster,protocol,oemserver</PackageTags>
+  </PropertyGroup>
+
+</Project>
