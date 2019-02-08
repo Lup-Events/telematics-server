@@ -1,6 +1,6 @@
 namespace Lup.Telematics.Models {
-	public enum FieldIds {
-		GpsData=0,
+	public enum Fields {
+		Tracking=0, // GPS Data
 		DebugEvent=1,
 		DigitalData=2,
 		OperatorId=3,

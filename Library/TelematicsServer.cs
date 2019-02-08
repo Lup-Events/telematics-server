@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using Lup.Telematics.Extensions;
 using Lup.Telematics.Models;
-using Lup.Telematics.Parsers;
 
 namespace Lup.Telematics {
 	/// <summary>
@@ -206,7 +203,7 @@ namespace Lup.Telematics {
 			}
 
 			// If header hasn't been processed yet, process it
-			if (null == state.ReceiveMessageType) {
+			if (null == state.ReceiveReceiveMessageType) {
 				// Yes, this could have been in the switch below, but it made for some funky reading
 				// Check sync bytes
 				if (state.ReceiveBuffer[0] != 0x02 || state.ReceiveBuffer[1] != 0x55) {
@@ -215,7 +212,7 @@ namespace Lup.Telematics {
 				}
 
 				// Decode message type
-				state.ReceiveMessageType = (MessageTypesRx) state.ReceiveBuffer[2];
+				state.ReceiveReceiveMessageType = (ReceiveMessageTypes) state.ReceiveBuffer[2];
 
 				// Decode message length and increase the number of bytes expected
 				var messageLength = BitConverter.ToUInt16(state.ReceiveBuffer, 3);
@@ -226,13 +223,12 @@ namespace Lup.Telematics {
 				return;
 			}
 
-			switch (state.ReceiveMessageType.Value) {
-				case MessageTypesRx.Hello: // Device is providing basic information about it
-					var p = 5;
-					state.Device = DeviceParser.Parse(state.ReceiveBuffer, ref p);
+			switch (state.ReceiveReceiveMessageType.Value) {
+				case ReceiveMessageTypes.Hello: // Device is providing basic information about it
+					state.Device = Device.Parse(state.ReceiveBuffer, 5);
 
 					state.Connection.Send(new Byte[] {0x02, 0x55}); // Sync bytes
-					state.Connection.Send((Byte) MessageTypesTx.HelloResponse); // Message type
+					state.Connection.Send((Byte) TransmitMessageTypes.HelloResponse); // Message type
 					state.Connection.Send((UInt16) 8); // Message length
 					state.Connection.Send(TelematicsTime.Encode(DateTime.UtcNow)); // Time
 					state.Connection.Send((UInt32) 0); // Flags TODO: how to tell device to redirect to OEM?
@@ -244,7 +240,7 @@ namespace Lup.Telematics {
 
 					break;
 				
-				case MessageTypesRx.Records: // Device is providing records
+				case ReceiveMessageTypes.Records: // Device is providing records
 					// It seems that MESSAGE contains multiple RECORDS
 					//   which contain multiple FIELDS
 					//     which contains multiple things which I'm going to call ATTRIBUTES
@@ -256,7 +252,7 @@ namespace Lup.Telematics {
 					var records = new List<Record>();
 
 					while (position < state.ReceiveBufferExpected) {
-						records.Add(RecordParser.Parse(state.ReceiveBuffer, ref position));
+						records.Add(Record.Parse(state.ReceiveBuffer, ref position));
 					}
 
 					OnRecordsReceived?.Invoke(this, new OnRecordsReceivedArgs() {
@@ -266,31 +262,31 @@ namespace Lup.Telematics {
 					});
 					break;
 				
-				case MessageTypesRx.CommitRequest: // Device asking us to confirm that we've successfully received and stored records
+				case ReceiveMessageTypes.CommitRequest: // Device asking us to confirm that we've successfully received and stored records
 					// Send confirmation // TODO: When would we not confirm a commit?
 					state.Connection.Send(new Byte[] {0x02, 0x55}); // Sync bytes
-					state.Connection.Send((Byte)MessageTypesTx.CommitResponse); // Message type
+					state.Connection.Send((Byte)TransmitMessageTypes.CommitResponse); // Message type
 					state.Connection.Send((UInt16)1); // Message length
 					state.Connection.Send((Byte) 1); // Success
 					break;
 				
-				case MessageTypesRx.VersionData: // Device providing version information (no idea what this is for!!)
+				case ReceiveMessageTypes.VersionData: // Device providing version information (no idea what this is for!!)
 					RaiseDeviceError(state, $"Version information received and discarded.", false); // TODO: do something with the information
 					break;
 				
-				case MessageTypesRx.TimeRequest: // Device asking for the current time
+				case ReceiveMessageTypes.TimeRequest: // Device asking for the current time
 					state.Connection.Send(new Byte[] {0x02, 0x55}); // Sync bytes
-					state.Connection.Send((Byte)MessageTypesTx.TimeResponse); // Message type
+					state.Connection.Send((Byte)TransmitMessageTypes.TimeResponse); // Message type
 					state.Connection.Send((UInt16)4); // Message length
 					state.Connection.Send(TelematicsTime.Encode(DateTime.UtcNow)); // Current time
 					break;
 				
-				case MessageTypesRx.AsyncMessageResponse: // Device is giving responses to async messages, which is not currently implemented, so should not be recieved
+				case ReceiveMessageTypes.AsyncMessageResponse: // Device is giving responses to async messages, which is not currently implemented, so should not be recieved
 					RaiseDeviceError(state, $"Message async responses received and discarded.", false); // TODO: do something with the information
 					break;
 				
 				default:
-					RaiseDeviceError(state, $"Unsupported message type received ({state.ReceiveMessageType.Value}). Message discarded.", false);
+					RaiseDeviceError(state, $"Unsupported message type received ({state.ReceiveReceiveMessageType.Value}). Message discarded.", false);
 					break;
 			}
 
@@ -305,7 +301,7 @@ namespace Lup.Telematics {
 		private void ResetState(ConnectionState state) {
 			state.ReceiveBufferExpected = HeaderSize;
 			state.ReceiveBufferUsed = 0;
-			state.ReceiveMessageType = null;
+			state.ReceiveReceiveMessageType = null;
 		}
 
 		private void RaiseDeviceError(ConnectionState state, String message, Boolean disconnect) {

@@ -33,7 +33,7 @@ namespace Lup.Telematics.Models {
 		/// </summary>
 		public Int32 ReceiveBufferExpected { get; set; }
 		
-		public MessageTypesRx? ReceiveMessageType { get; set; }
+		public ReceiveMessageTypes? ReceiveReceiveMessageType { get; set; }
 		
 	}
 }

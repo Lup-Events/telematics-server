@@ -4,7 +4,7 @@ namespace Lup.Telematics.Models {
 	/// <summary>
 	/// Message types received by device.
 	/// </summary>
-	public enum MessageTypesTx : Byte {
+	public enum TransmitMessageTypes : Byte {
 		HelloResponse = 1,
 		CommitResponse = 6,
 		AsyncMessageRequest = 20,

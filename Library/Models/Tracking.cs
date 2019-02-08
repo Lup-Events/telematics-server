@@ -2,7 +2,7 @@ using System;
 using System.Transactions;
 
 namespace Lup.Telematics.Models {
-	public class Reading {
+	public class Tracking {
 		public DateTime RTCTime { get; set; }
 		
 		public DateTime GpsTime { get; set; }
@@ -68,5 +68,22 @@ namespace Lup.Telematics.Models {
 		/// Is the GPS fix valid in 3D? The altitude is largely meaningless if not.
 		/// </summary>
 		public Boolean Is3DFix { get; set; }
+		
+		public static Tracking Parse(Byte[] input, Int32 offset) {
+			var output = new Tracking();
+			output.GpsTime = TelematicsTime.Decode(BitConverter.ToUInt32(input, offset));
+			output.PositionLatitude = BitConverter.ToInt32(input, offset + 4) / 1e7;
+			output.PositionLongitude = BitConverter.ToInt32(input, offset + 8) / 1e7;
+			output.PositionAltitude = BitConverter.ToInt16(input, offset + 12) ;
+			output.Speed = BitConverter.ToUInt16(input, offset + 14) ;
+			output.SpeedAccuracy = input[16] * 10 / 100;
+			output.Heading = input[17] * 2;
+			output.PDOP = input[18] / 10;
+			output.PositionAccuracy = input[19];
+			output.IsValidFix = (input[20] & 0b00000001) > 0; // TODO: check this is what is meant by "b0"
+			output.Is3DFix = (input[20] & 0b00000010) > 0; // TODO: check this is what is meant by "b1"
+
+			return output;
+		}
 	}
 }
