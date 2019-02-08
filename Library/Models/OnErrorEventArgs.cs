@@ -3,13 +3,10 @@ using System;
 namespace Lup.Telematics.Models {
 	public class OnErrorEventArgs {
 		/// <summary>
-		/// The remote IP address as a string.
+		/// Information we know about the remote device.
 		/// </summary>
-		/// <remarks>
-		/// This is provided as a string rather than an IPAddress so that the consumer does not require System.Net.
-		/// </remarks>
-		public String RemoteAddressString { get; set; }
-
+		public Device Device { get; set; }
+		
 		/// <summary>
 		/// The error message.
 		/// </summary>
