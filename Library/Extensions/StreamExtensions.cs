@@ -1,17 +1,27 @@
 using System;
 using System.IO;
-using System.Net.Sockets;
 
 namespace Lup.Telematics.Extensions {
 	public static class StreamExtensions {
-		public static void Send(this Socket target, Byte value) {
-			target.Send(new Byte[]{value});
+		public static Byte ReadUInt8(this Stream target) {
+			var b = target.ReadByte();
+			if (b < 0) {
+				throw new EndOfStreamException();
+			}
+			return (Byte)b;
 		}
-		public static void Send(this Socket target, UInt16 value) {
-			target.Send(BitConverter.GetBytes(value));
+		public static UInt16 ReadUInt16(this Stream target) {
+			return BitConverter.ToUInt16(target.Read(2),0);
 		}
-		public static void Send(this Socket target, UInt32 value) {
-			target.Send(BitConverter.GetBytes(value));
+		
+		public static UInt32 ReadUInt32(this Stream target) {
+			return BitConverter.ToUInt32(target.Read(4),0);
+		}
+		
+		public static Byte[] Read(this Stream target, Int32 count) {
+			var buffer = new Byte[count];
+			target.Read(buffer, 0, count);
+			return buffer;
 		}
 	}
 }

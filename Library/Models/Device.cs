@@ -2,10 +2,6 @@ using System;
 
 namespace Lup.Telematics.Models {
 	public class Device {
-		/// <summary>
-		/// The remote address (IP and port).
-		/// </summary>
-		public String RemoteAddressString { get; set; }
 
 		public UInt32 Serial { get; set; }
 		public String ModemIMEI { get; set; } // 16 bytes
@@ -16,8 +12,6 @@ namespace Lup.Telematics.Models {
 		public Byte FirmwareMinor { get; set; }
 		
 		public Boolean IsPinEnabled { get; set; }
-		
-		public Boolean IsHelloReceived { get; set; }
 		
 		[Flags]
 		public enum Flag:UInt32 {

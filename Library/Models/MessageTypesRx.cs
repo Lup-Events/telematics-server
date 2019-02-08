@@ -6,7 +6,8 @@ namespace Lup.Telematics.Models {
 	/// </summary>
 	public enum MessageTypesRx:Byte {
 		Hello = 0,
-		SendDataRecords = 4,
+		TimeRequest = 1,
+		Records = 4,
 		CommitRequest = 5,
 		VersionData = 14,
 		AsyncMessageResponse = 21,

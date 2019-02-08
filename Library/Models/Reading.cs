@@ -5,27 +5,27 @@ namespace Lup.Telematics.Models {
 	public class Reading {
 		public DateTime RTCTime { get; set; }
 		
-		public DateTime GPSTime { get; set; }
+		public DateTime GpsTime { get; set; }
 		
 		/// <summary>
 		/// The devices' latitudinal position, in degrees.
 		/// </summary>
-		public Single PositionLatitude { get; set; }
+		public Double PositionLatitude { get; set; }
 		
 		/// <summary>
 		/// The devices' longitudinal position, in degrees.
 		/// </summary>
-		public Single PositionLongitude { get; set; }
+		public Double PositionLongitude { get; set; }
 		
 		/// <summary>
 		/// The devices elevation, in meters.
 		/// </summary>
-		public Single PositionAltitude { get; set; }
+		public Double PositionAltitude { get; set; }
 		
 		/// <summary>
 		/// 2D ground speed, in m/s
 		/// </summary>
-		public Single Speed { get; set; }
+		public Double Speed { get; set; }
 		
 		/// <summary>
 		/// The estimated accuracy of GroundSpeed, in m/s.
@@ -33,7 +33,7 @@ namespace Lup.Telematics.Models {
 		/// <remarks>
 		/// This is an estimate only.
 		/// </remarks>
-		public Single SpeedAccuracy { get; set; }
+		public Double SpeedAccuracy { get; set; }
 		
 		/// <summary>
 		/// 2D heading, in degrees.
@@ -41,7 +41,7 @@ namespace Lup.Telematics.Models {
 		/// <remarks>
 		/// Accuracy is to 2 degrees.
 		/// </remarks>
-		public Single Heading { get; set; }
+		public Double Heading { get; set; }
 		
 		/// <summary>
 		/// Position Dilution Of Precision describes error caused by the relative position of the GPS satellites.
@@ -49,7 +49,7 @@ namespace Lup.Telematics.Models {
 		/// <remarks>
 		/// Basically, the more signals a GPS receiver can “see” (spread apart versus close together), the more precise it can be.
 		/// </remarks>
-		public Single PDOP { get; set; }
+		public Double PDOP { get; set; }
 		
 		/// <summary>
 		/// The estimated accuracy of the position, in meters.
@@ -57,7 +57,7 @@ namespace Lup.Telematics.Models {
 		/// <remarks>
 		/// This is an estimate only.
 		/// </remarks>
-		public Single  PositionAccuracy { get; set; }
+		public Double  PositionAccuracy { get; set; }
 		
 		/// <summary>
 		/// Is the GPS fix valid? Data all other data is largely meaningless if not.

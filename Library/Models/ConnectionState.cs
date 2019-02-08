@@ -4,6 +4,11 @@ using System.Net.Sockets;
 namespace Lup.Telematics.Models {
 	public class ConnectionState {
 		/// <summary>
+		/// The remote address (IP and port).
+		/// </summary>
+		public String RemoteAddressString { get; set; }
+		
+		/// <summary>
 		/// The underlying socket connection.
 		/// </summary>
 		public Socket Connection { get; set; }
